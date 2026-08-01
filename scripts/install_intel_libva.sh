@@ -6,4 +6,4 @@ cd libva
 make
 make install
 ldconfig
-cd ..<
+cd ..
