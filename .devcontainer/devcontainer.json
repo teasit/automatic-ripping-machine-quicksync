@@ -1,0 +1,4 @@
+{
+    "name": "automatic-ripping-machine-quicksync-devcontainer",
+    "image": "automaticrippingmachine/automatic-ripping-machine:2.24.3"
+}

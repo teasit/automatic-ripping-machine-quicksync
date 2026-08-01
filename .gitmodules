@@ -1,0 +1,9 @@
+[submodule "libvpl"]
+	path = libvpl
+	url = https://github.com/intel/libvpl.git
+[submodule "vpl-gpu-rt"]
+	path = vpl-gpu-rt
+	url = https://github.com/intel/vpl-gpu-rt.git
+[submodule "libva"]
+	path = libva
+	url = https://github.com/intel/libva.git
