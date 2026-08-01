@@ -9,6 +9,8 @@ COPY libva/ ./libva/
 COPY libvpl/ ./libvpl/
 COPY vpl-gpu-rt/ ./vpl-gpu-rt/
 
+RUN chmod +x ./scripts/*.sh
+
 # Installs LIBVA as it is a dependency for Intel VPL.
 RUN ./scripts/install_intel_libva.sh
 
