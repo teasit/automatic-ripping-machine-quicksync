@@ -24,6 +24,7 @@ RUN ./scripts/install_intel_vpl_gpu.sh
 RUN echo /opt/automatic-ripping-machine-quicksync/_vplinstall/lib > /etc/ld.so.conf.d/libvpl.conf && ldconfig
 ENV LD_LIBRARY_PATH=/opt/automatic-ripping-machine-quicksync/_vplinstall/lib:/usr/lib/x86_64-linux-gnu
 
-USER arm
+# Keep root for container init (/sbin/my_init) compatibility with upstream ARM image.
+USER root
 
 WORKDIR /home/arm
