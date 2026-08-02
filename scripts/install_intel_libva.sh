@@ -19,7 +19,7 @@ apt-get install -y \
 	libxcb-xfixes0-dev \
 	meson \
 	pkg-config \
-	vainfo
+	vainfo \
 	wayland-protocols
 
 cd libva
