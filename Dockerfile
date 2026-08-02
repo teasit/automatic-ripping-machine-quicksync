@@ -1,18 +1,27 @@
 FROM automaticrippingmachine/automatic-ripping-machine:2.24.3
 
+RUN apt update -y && apt upgrade -y
+
 USER root
 
 WORKDIR /opt/automatic-ripping-machine-quicksync
 
 COPY scripts/ ./scripts/
 COPY libva/ ./libva/
+COPY libva-utils/ ./libva-utils/
 COPY libvpl/ ./libvpl/
 COPY vpl-gpu-rt/ ./vpl-gpu-rt/
 
+# Ensure the scripts are executable.
 RUN chmod +x ./scripts/*.sh
 
 # Installs LIBVA as it is a dependency for Intel VPL.
+# Installation directory: /usr/lib/x86_64-linux-gnu
 RUN ./scripts/install_intel_libva.sh
+
+# Installs LIBVA-UTILS (enables vainfo command).
+# This is probably not required, but useful for debugging.
+RUN ./scripts/install_intel_libva_utils.sh
 
 # Installs the dispatcher and library headers.
 RUN ./scripts/install_intel_vpl_lib.sh
