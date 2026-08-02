@@ -2,13 +2,13 @@ FROM automaticrippingmachine/automatic-ripping-machine:2.24.3
 
 RUN apt update -y && apt upgrade -y
 
-USER root
-
 WORKDIR /opt/automatic-ripping-machine-quicksync
 
 COPY scripts/ ./scripts/
 COPY libva/ ./libva/
 COPY libva-utils/ ./libva-utils/
+COPY gmmlib/ ./gmmlib/
+COPY media-driver/ ./media-driver/
 COPY libvpl/ ./libvpl/
 COPY vpl-gpu-rt/ ./vpl-gpu-rt/
 
@@ -23,6 +23,12 @@ RUN ./scripts/install_intel_libva.sh
 # This is probably not required, but useful for debugging.
 RUN ./scripts/install_intel_libva_utils.sh
 
+# Install gmmlib (required by Intel Media Driver for VAAPI).
+RUN ./scripts/install_intel_gmmlib.sh
+
+# Install Intel Media Driver for VAAPI.
+RUN ./scripts/install_intel_media_driver.sh
+
 # Installs the dispatcher and library headers.
 RUN ./scripts/install_intel_vpl_lib.sh
 
@@ -36,8 +42,5 @@ RUN ldconfig
 RUN echo /opt/automatic-ripping-machine-quicksync/_vplinstall/lib > /etc/ld.so.conf.d/libvpl.conf && ldconfig
 ENV LD_LIBRARY_PATH=/opt/automatic-ripping-machine-quicksync/_vplinstall/lib:/opt/intel/mediasdk/lib:/usr/lib/x86_64-linux-gnu
 ENV ONEVPL_PRIORITY_PATH=/opt/intel/mediasdk/lib
-
-# Keep root for container init (/sbin/my_init) compatibility with upstream ARM image.
-USER root
 
 WORKDIR /home/arm
