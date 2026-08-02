@@ -10,8 +10,10 @@ on:
       - .gitmodules
       - scripts/**
       - libva
+      - libva-utils
       - libvpl
       - vpl-gpu-rt
+      - gmmlib
   workflow_dispatch:
 
 permissions:

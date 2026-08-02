@@ -2,6 +2,8 @@ FROM automaticrippingmachine/automatic-ripping-machine:2.24.3
 
 RUN apt update -y && apt upgrade -y
 
+ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
+
 WORKDIR /opt/automatic-ripping-machine-quicksync
 
 COPY scripts/ ./scripts/
@@ -38,5 +40,5 @@ RUN ./scripts/install_intel_vpl_gpu.sh
 # Show the runtime libva version that HandBrakeCLI will resolve against.
 RUN pkg-config --modversion libva && ldconfig
 
-ENV LIBVA_DRIVERS_PATH=/usr/lib/x86_64-linux-gnu/dri
+ENV LIBVA_DRIVERS_PATH=/usr/local/lib/dri
 ENV LIBVA_DRIVER_NAME=iHD

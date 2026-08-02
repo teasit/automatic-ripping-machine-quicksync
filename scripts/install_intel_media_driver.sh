@@ -6,17 +6,12 @@ apt install autoconf libtool libdrm-dev xorg xorg-dev openbox libx11-dev libgl1-
 rm -rf build_meta
 mkdir -p build_meta
 cd build_meta
-cmake ../media-driver
+cmake ../media-driver -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_LIBDIR=lib -DLIBVA_DRIVERS_PATH=/usr/local/lib/dri
 make -j$(nproc)
 make install
 cd ..
+ldconfig
 
 # Expected to be set in dockerfile:
-# export LIBVA_DRIVERS_PATH=/usr/lib/x86_64-linux-gnu/dri
+# export LIBVA_DRIVERS_PATH=/usr/local/lib/dri
 # export LIBVA_DRIVER_NAME=iHD
-
-# TODO: Currently throws these errors:
-#   E: Unable to locate package xorg
-#   E: Unable to locate package xorg-dev
-#   E: Unable to locate package openbox
-#   E: Unable to locate package libgl1-mesa-glx
