@@ -1,18 +1,24 @@
 [submodule "libvpl"]
 	path = libvpl
 	url = https://github.com/intel/libvpl.git
+	ignore = dirty
 [submodule "vpl-gpu-rt"]
 	path = vpl-gpu-rt
 	url = https://github.com/intel/vpl-gpu-rt.git
+	ignore = dirty
 [submodule "libva"]
 	path = libva
 	url = https://github.com/intel/libva.git
+	ignore = dirty
 [submodule "libva-utils"]
 	path = libva-utils
 	url = https://github.com/intel/libva-utils.git
+	ignore = dirty
 [submodule "media-driver"]
 	path = media-driver
 	url = https://github.com/intel/media-driver
+	ignore = dirty
 [submodule "gmmlib"]
 	path = gmmlib
 	url = https://github.com/intel/gmmlib.git
+	ignore = dirty
