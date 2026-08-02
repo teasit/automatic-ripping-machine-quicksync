@@ -13,3 +13,5 @@
 [submodule "media-driver"]
 	path = media-driver
 	url = https://github.com/intel/media-driver
+[submodule "gmmlib"]
+	path = gmmlib
