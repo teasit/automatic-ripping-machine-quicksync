@@ -18,7 +18,7 @@ COPY vpl-gpu-rt/ ./vpl-gpu-rt/
 RUN chmod +x ./scripts/*.sh
 
 # Installs LIBVA as it is a dependency for Intel VPL.
-# Installation directory: /usr/lib/x86_64-linux-gnu
+# Installation directory: /usr/local/lib/x86_64-linux-gnu
 RUN ./scripts/install_intel_libva.sh
 
 # Installs LIBVA-UTILS (enables vainfo command).
@@ -40,5 +40,6 @@ RUN ./scripts/install_intel_vpl_gpu.sh
 # Show the runtime libva version that HandBrakeCLI will resolve against.
 RUN pkg-config --modversion libva && ldconfig
 
+ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/x86_64-linux-gnu
 ENV LIBVA_DRIVERS_PATH=/usr/local/lib/dri
 ENV LIBVA_DRIVER_NAME=iHD
