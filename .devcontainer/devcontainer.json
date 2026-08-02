@@ -1,4 +1,7 @@
 {
     "name": "automatic-ripping-machine-quicksync-devcontainer",
-    "image": "automaticrippingmachine/automatic-ripping-machine:2.24.3"
+    "image": "automaticrippingmachine/automatic-ripping-machine:2.24.3",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:4": {}
+    }
 }
