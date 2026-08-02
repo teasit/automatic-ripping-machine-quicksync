@@ -34,3 +34,9 @@ RUN ./scripts/install_intel_vpl_lib.sh
 
 # Installs the implementation of the library.
 RUN ./scripts/install_intel_vpl_gpu.sh
+
+# Show the runtime libva version that HandBrakeCLI will resolve against.
+RUN pkg-config --modversion libva && ldconfig
+
+ENV LIBVA_DRIVERS_PATH=/usr/lib/x86_64-linux-gnu/dri
+ENV LIBVA_DRIVER_NAME=iHD

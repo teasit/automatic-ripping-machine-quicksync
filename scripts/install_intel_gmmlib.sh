@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+
 # https://github.com/intel/gmmlib#building
 cd gmmlib
 mkdir -p build && cd build
