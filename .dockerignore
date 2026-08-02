@@ -1,0 +1,6 @@
+# Exclude host-side build artifacts that break in-container CMake cache paths
+**/_build/
+**/build/
+*.o
+*.a
+*.so

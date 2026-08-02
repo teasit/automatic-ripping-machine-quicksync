@@ -20,6 +20,9 @@ RUN ./scripts/install_intel_vpl_lib.sh
 # Installs the implementation of the library.
 RUN ./scripts/install_intel_vpl_gpu.sh
 
+# Installs the VPL runtime libraries to a location discoverable by the dynamic linker.
+RUN ldconfig
+
 # Ensure the VPL runtime libraries are discoverable by the dynamic linker.
 RUN echo /opt/automatic-ripping-machine-quicksync/_vplinstall/lib > /etc/ld.so.conf.d/libvpl.conf && ldconfig
 ENV LD_LIBRARY_PATH=/opt/automatic-ripping-machine-quicksync/_vplinstall/lib:/opt/intel/mediasdk/lib:/usr/lib/x86_64-linux-gnu
