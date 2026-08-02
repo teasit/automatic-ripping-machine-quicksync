@@ -8,9 +8,11 @@ apt-get install -y \
 	intel-media-va-driver-non-free \
 	libdrm-dev \
 	libtool \
+	libxext-dev \
 	libwayland-dev \
 	libx11-dev \
 	libx11-xcb-dev \
+	libxfixes-dev \
 	libxcb-dri3-dev \
 	libxcb-present-dev \
 	libxcb-randr0-dev \
