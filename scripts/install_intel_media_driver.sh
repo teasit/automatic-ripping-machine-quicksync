@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # https://github.com/intel/media-driver#building
-apt install autoconf libtool libdrm-dev xorg xorg-dev openbox libx11-dev libgl1-mesa-glx
+apt-get update
+apt-get install -y --no-install-recommends autoconf automake cmake libdrm-dev libtool libx11-dev libxext-dev libxfixes-dev pkg-config
 rm -rf build_meta
 mkdir -p build_meta
 cd build_meta
