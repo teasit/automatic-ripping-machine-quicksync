@@ -3,6 +3,7 @@
 cd ./libvpl
 export VPL_INSTALL_DIR=`pwd`/../_vplinstall
 . ./script/bootstrap
+rm -rf _build
 cmake -B _build -DCMAKE_INSTALL_PREFIX=$VPL_INSTALL_DIR
 cmake --build _build
 cmake --install _build
