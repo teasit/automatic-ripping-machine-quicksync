@@ -1,4 +1,4 @@
-name: Build and Publish Docker Image
+name: Build and Publish Docker Images
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - Dockerfile
+      - Dockerfile.Ubuntu24
       - .github/workflows/docker-publish.yml
       - .gitmodules
       - scripts/**
@@ -28,6 +29,17 @@ jobs:
   docker:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # jammy base, builds the QSV stack via do-release-upgrade + source builds.
+          - dockerfile: Dockerfile
+            image_suffix: ""
+          # noble (Ubuntu 24.04) base, upgraded in place from the same jammy ARM image.
+          - dockerfile: Dockerfile.Ubuntu24
+            image_suffix: "-ubuntu24"
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -48,7 +60,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/${{ github.repository }}${{ matrix.image_suffix }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
@@ -58,9 +70,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.dockerfile }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.dockerfile }}
