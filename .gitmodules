@@ -22,3 +22,6 @@
 	path = gmmlib
 	url = https://github.com/intel/gmmlib.git
 	ignore = dirty
+[submodule "HandBrake"]
+	path = HandBrake
+	url = https://github.com/HandBrake/HandBrake.git
