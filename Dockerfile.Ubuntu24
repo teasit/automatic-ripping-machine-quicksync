@@ -31,14 +31,14 @@ RUN chmod +x ./scripts/*.sh
 
 # Installs LIBVA as it is a dependency for Intel VPL.
 # Installation directory: /usr/local/lib/x86_64-linux-gnu
-RUN ./scripts/install_intel_libva.sh
+RUN ./scripts/install_intel_libva.sh && rm -rf ./libva
 
 # Installs LIBVA-UTILS (enables vainfo command).
 # This is probably not required, but useful for debugging.
-RUN ./scripts/install_intel_libva_utils.sh
+RUN ./scripts/install_intel_libva_utils.sh && rm -rf ./libva-utils
 
 # Install gmmlib (required by Intel Media Driver for VAAPI).
-RUN ./scripts/install_intel_gmmlib.sh
+RUN ./scripts/install_intel_gmmlib.sh && rm -rf ./gmmlib
 
 # Install Intel Media Driver for VAAPI.
 RUN ./scripts/install_intel_media_driver.sh
