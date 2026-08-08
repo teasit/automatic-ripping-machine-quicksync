@@ -38,8 +38,8 @@ RUN ./scripts/install_intel_vpl_lib.sh
 # Installs the implementation of the library.
 RUN ./scripts/install_intel_vpl_gpu.sh
 
-# Installs HandBrakeCLI with Intel QuickSync support.
-RUN ./scripts/install_handbrake.sh
+# Installs HandBrakeCLI with Intel QuickSync support using ARM script.
+RUN /install_handbrake.sh
 
 # Remove submodule sources and build directories now that everything is installed to /usr/local.
 RUN rm -rf ./scripts ./libva ./libva-utils ./gmmlib ./media-driver ./libvpl ./vpl-gpu-rt ./build_meta ./HandBrake
