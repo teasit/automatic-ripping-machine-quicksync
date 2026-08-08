@@ -25,3 +25,4 @@
 [submodule "HandBrake"]
 	path = HandBrake
 	url = https://github.com/HandBrake/HandBrake.git
+	ignore = dirty
