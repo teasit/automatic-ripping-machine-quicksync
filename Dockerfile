@@ -13,6 +13,7 @@ COPY gmmlib/ ./gmmlib/
 COPY media-driver/ ./media-driver/
 COPY libvpl/ ./libvpl/
 COPY vpl-gpu-rt/ ./vpl-gpu-rt/
+COPY HandBrake ./HandBrake/
 
 # Ensure the scripts are executable.
 RUN chmod +x ./scripts/*.sh
@@ -37,9 +38,16 @@ RUN ./scripts/install_intel_vpl_lib.sh
 # Installs the implementation of the library.
 RUN ./scripts/install_intel_vpl_gpu.sh
 
+# Installs HandBrakeCLI with Intel QuickSync support.
+RUN ./scripts/install_handbrake.sh
+
+# Remove submodule sources and build directories now that everything is installed to /usr/local.
+RUN rm -rf ./scripts ./libva ./libva-utils ./gmmlib ./media-driver ./libvpl ./vpl-gpu-rt ./build_meta ./HandBrake
+
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/x86_64-linux-gnu
 ENV LIBVA_DRIVERS_PATH=/usr/local/lib/dri
 ENV LIBVA_DRIVER_NAME=iHD
+ENV ONEVPL_SEARCH_PATH=/usr/local/lib
 
 # Show the runtime libva version that HandBrakeCLI will resolve against.
 RUN pkg-config --modversion libva && ldconfig
