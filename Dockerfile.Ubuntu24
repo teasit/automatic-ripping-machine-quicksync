@@ -21,7 +21,7 @@ COPY scripts/ ./scripts/
 COPY libva/ ./libva/
 COPY libva-utils/ ./libva-utils/
 COPY gmmlib/ ./gmmlib/
-COPY media-driver/ ./m2edia-driver/
+COPY media-driver/ ./media-driver/
 COPY libvpl/ ./libvpl/
 COPY vpl-gpu-rt/ ./vpl-gpu-rt/
 COPY HandBrake ./HandBrake/
