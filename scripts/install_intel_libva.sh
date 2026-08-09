@@ -2,6 +2,7 @@
 set -euo pipefail
 
 # Also allows to build x11 and glx support for libva, which is required for some applications like HandBrakeCLI.
+apt-get update
 apt-get install -y libx11-xcb-dev libxcb-dri3-dev libxfixes-dev
 
 # https://github.com/intel/libva#build-and-install-libva
