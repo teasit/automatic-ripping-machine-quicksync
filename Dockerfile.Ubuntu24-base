@@ -18,7 +18,7 @@ RUN DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInter
 # image, so they are invisible to the new python3 and armui/runui.py fails to start.
 # Ubuntu 24.04 also enforces PEP 668, so --break-system-packages is required here.
 RUN python3 --version && \
-    python3 -m pip install --break-system-packages --upgrade pip wheel setuptools psutil pyudev && \
+    python3 -m pip install --break-system-packages --ignore-installed --upgrade pip wheel setuptools psutil pyudev && \
     python3 -m pip install --break-system-packages --ignore-installed --prefer-binary -r /opt/arm/requirements.txt
 
 RUN apt-get clean && apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
