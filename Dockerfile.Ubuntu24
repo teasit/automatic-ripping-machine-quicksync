@@ -1,5 +1,5 @@
 ARG REPO
-FROM ghcr.io/$REPO/automatic-ripping-machine-quicksync-ubuntu24-base:latest
+FROM ghcr.io/$REPO-ubuntu24-base:latest
 
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
 
