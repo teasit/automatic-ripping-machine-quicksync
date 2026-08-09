@@ -1,18 +1,5 @@
-FROM automaticrippingmachine/automatic-ripping-machine:2.24.3
-
-# Base image is Ubuntu 22.04 which is capped at libva 1.14.0, which is too old for the Intel VPL library.
-# Therefore we upgrade the base image as suggested here:
-#   https://github.com/automatic-ripping-machine/automatic-ripping-machine/issues/1522#issuecomment-3331943958
-# DistUpgradeViewNonInteractive only silences do-release-upgrade's own prompts. Conffile
-# prompts (e.g. "sshd_config has been locally modified") come from dpkg itself and need
-# Dpkg::Options set explicitly, otherwise dpkg blocks waiting on stdin even in this frontend.
-RUN echo 'Dpkg::Options {"--force-confdef";"--force-confold";}' > /etc/apt/apt.conf.d/local
-RUN DEBIAN_FRONTEND=noninteractive apt update -y && \
-    DEBIAN_FRONTEND=noninteractive apt install -y update-manager-core && \
-    DEBIAN_FRONTEND=noninteractive apt update -y && \
-    DEBIAN_FRONTEND=noninteractive apt upgrade -y
-RUN DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive
-RUN apt-get clean && apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+ARG REPO
+FROM ghcr.io/$REPO/automatic-ripping-machine-quicksync-ubuntu24-base:latest
 
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
 
@@ -42,7 +29,7 @@ RUN ./scripts/install_intel_libva_utils.sh && rm -rf ./libva-utils
 RUN ./scripts/install_intel_gmmlib.sh && rm -rf ./gmmlib
 
 # Install Intel Media Driver for VAAPI.
-RUN ./scripts/install_intel_media_driver.sh
+RUN ./scripts/install_intel_media_driver.sh && rm -rf ./media-driver
 
 # Installs the dispatcher and library headers.
 RUN ./scripts/install_intel_vpl_lib.sh
