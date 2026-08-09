@@ -11,6 +11,7 @@ cmake ../media-driver -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/loc
 make -j$(nproc)
 make install
 cd ..
+rm -rf build_meta
 ldconfig
 
 # Expected to be set in dockerfile:
