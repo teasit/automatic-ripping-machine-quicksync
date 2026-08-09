@@ -51,3 +51,8 @@ ENV ONEVPL_SEARCH_PATH=/usr/local/lib
 
 # Show the runtime libva version that HandBrakeCLI will resolve against.
 RUN pkg-config --modversion libva && ldconfig
+
+# Restore ARM's expected working directory; upstream's CMD ["/sbin/my_init"] doesn't need it,
+# but scripts/tools invoked with relative paths at runtime assume /home/arm.
+WORKDIR /home/arm
+
