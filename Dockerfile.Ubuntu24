@@ -1,52 +1,11 @@
 ARG REPO
 FROM ghcr.io/$REPO-ubuntu24-base:latest
 
-ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig
-
-WORKDIR /opt/automatic-ripping-machine-quicksync
-
-COPY scripts/ ./scripts/
-COPY libva/ ./libva/
-COPY libva-utils/ ./libva-utils/
-COPY gmmlib/ ./gmmlib/
-COPY media-driver/ ./media-driver/
-COPY libvpl/ ./libvpl/
-COPY vpl-gpu-rt/ ./vpl-gpu-rt/
-COPY HandBrake ./HandBrake/
-
-# Ensure the scripts are executable.
-RUN chmod +x ./scripts/*.sh
-
-# Installs LIBVA as it is a dependency for Intel VPL.
-# Installation directory: /usr/local/lib/x86_64-linux-gnu
-RUN ./scripts/install_intel_libva.sh && rm -rf ./libva
-
-# Installs LIBVA-UTILS (enables vainfo command).
-# This is probably not required, but useful for debugging.
-RUN ./scripts/install_intel_libva_utils.sh && rm -rf ./libva-utils
-
-# Install gmmlib (required by Intel Media Driver for VAAPI).
-RUN ./scripts/install_intel_gmmlib.sh && rm -rf ./gmmlib
-
-# Install Intel Media Driver for VAAPI.
-RUN ./scripts/install_intel_media_driver.sh && rm -rf ./media-driver
-
-# Installs the dispatcher and library headers.
-RUN ./scripts/install_intel_vpl_lib.sh
-
-# Installs the implementation of the library.
-RUN ./scripts/install_intel_vpl_gpu.sh
-
-# Installs HandBrakeCLI with Intel QuickSync support using ARM script.
-RUN /install_handbrake.sh
-
-# Remove submodule sources and build directories now that everything is installed to /usr/local.
-RUN rm -rf ./scripts ./libva ./libva-utils ./gmmlib ./media-driver ./libvpl ./vpl-gpu-rt ./build_meta ./HandBrake
-
-ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/x86_64-linux-gnu
-ENV LIBVA_DRIVERS_PATH=/usr/local/lib/dri
-ENV LIBVA_DRIVER_NAME=iHD
-ENV ONEVPL_SEARCH_PATH=/usr/local/lib
+# Reinstall the upstream ARM HandBrake build dependencies after the distro upgrade, then
+# rebuild HandBrakeCLI so it links against Ubuntu 24's newer VA-API stack.
+RUN chmod +x /install_mkv_hb_deps.sh /install_handbrake.sh && \
+    /install_mkv_hb_deps.sh && \
+    /install_handbrake.sh
 
 # Show the runtime libva version that HandBrakeCLI will resolve against.
 RUN pkg-config --modversion libva && ldconfig
