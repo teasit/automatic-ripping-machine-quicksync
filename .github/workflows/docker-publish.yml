@@ -164,7 +164,9 @@ jobs:
           file: ./Dockerfile.Ubuntu24-base
           load: true
           tags: ghcr.io/${{ github.repository }}-ubuntu24-base:latest
-          cache-from: type=gha,scope=Dockerfile.Ubuntu24-base
+          cache-from: |
+            type=gha,scope=Dockerfile.Ubuntu24-base
+            type=gha,scope=Dockerfile.Ubuntu24-base-branch-validation
           cache-to: type=gha,mode=max,scope=Dockerfile.Ubuntu24-base-branch-validation
 
       - name: Build image
