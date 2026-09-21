@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 
 
-ARM_CONFIG = Path("/opt/arm/config/arm.yaml")
+ARM_CONFIG = Path("/home/arm/config/arm.yaml")
 
 
 def load_config():
