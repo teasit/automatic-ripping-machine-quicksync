@@ -1,4 +1,4 @@
-FROM automaticrippingmachine/automatic-ripping-machine:2.24.3
+FROM automaticrippingmachine/automatic-ripping-machine:latest
 
 # Base image is Ubuntu 22.04 which is capped at libva 1.14.0, which is too old for the Intel VPL library.
 # Therefore we upgrade the base image as suggested here:
