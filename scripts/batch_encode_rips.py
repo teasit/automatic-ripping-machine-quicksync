@@ -20,10 +20,21 @@ def load_config():
         return yaml.safe_load(f)
 
 
-def find_mkv_files(input_dir: Path):
+EXTRAS_DIRS = {
+    "extras", "featurettes", "behind the scenes", "deleted scenes",
+    "interviews", "scenes", "shorts", "trailers", "clips", "other", "samples",
+}
+
+
+def is_extra(relative: Path):
+    return any(part.lower() in EXTRAS_DIRS for part in relative.parts[:-1])
+
+
+def find_mkv_files(input_dir: Path, ignore_extras=False):
     return sorted(
         p for p in input_dir.rglob("*")
         if p.is_file() and p.suffix.lower() == ".mkv"
+        and not (ignore_extras and is_extra(p.relative_to(input_dir)))
     )
 
 
@@ -120,6 +131,12 @@ def main():
         help="Proceed without asking for confirmation",
     )
 
+    parser.add_argument(
+        "--ignore-extras",
+        action="store_true",
+        help="Skip MKVs inside extras folders (Extras, Featurettes, Trailers, ...)",
+    )
+
     args = parser.parse_args()
 
     input_dir = args.input.resolve()
@@ -147,8 +164,9 @@ def main():
     print(f"BD args    : {hb_args}")
     print(f"Input      : {input_dir}")
     print(f"Output     : {output_dir}")
+    print(f"Skip extras: {args.ignore_extras}")
 
-    files = find_mkv_files(input_dir)
+    files = find_mkv_files(input_dir, args.ignore_extras)
 
     if not files:
         print("No MKV files found.")
