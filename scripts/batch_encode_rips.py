@@ -52,7 +52,7 @@ def print_tree(paths, existing):
             last = i == len(items) - 1
             label = name
             if not isinstance(child, dict) and child in existing:
-                label += "  [output exists - SKIP]"
+                label += "  [output exists - OVERWRITE]"
             print(f"{prefix}{'└── ' if last else '├── '}{label}")
             if isinstance(child, dict):
                 walk(child, prefix + ("    " if last else "│   "))
@@ -106,6 +106,13 @@ def encode_file(config, source: Path, destination: Path):
         raise RuntimeError(
             f"HandBrake failed with exit code {result.returncode}: {source}"
         )
+
+
+def confirm(prompt):
+    try:
+        return input(prompt).strip().lower() in ("y", "yes")
+    except EOFError:
+        return False
 
 
 def main():
@@ -181,23 +188,22 @@ def main():
     print(f"\nTarget output folder: {output_dir}")
     if existing:
         print(
-            f"{len(existing)} output file(s) already exist and will be SKIPPED "
-            "(not overwritten)."
+            f"{len(existing)} output file(s) already exist and will be OVERWRITTEN."
         )
-    print("No files will be overwritten.")
-
-    if len(existing) == len(files):
-        print("Nothing to encode.")
-        return
+    else:
+        print("No files will be overwritten.")
 
     if not args.y:
-        try:
-            answer = input("\nProceed with batch encode? [y/N] ").strip().lower()
-        except EOFError:
-            answer = ""
-        if answer not in ("y", "yes"):
+        if not confirm("\nProceed with batch encode? [y/N] "):
             print("Aborted.")
             return
+        if existing:
+            print("\nThe following output file(s) will be overwritten:")
+            for r in sorted(existing):
+                print(f"  {(output_dir / r).with_suffix('.mkv')}")
+            if not confirm("\nReally overwrite these file(s)? [y/N] "):
+                print("Aborted.")
+                return
 
     for index, source in enumerate(files, start=1):
         relative = source.relative_to(input_dir)
@@ -211,9 +217,7 @@ def main():
         print(f"[{index}/{len(files)}]")
 
         if destination.exists():
-            print(f"SKIP: Output already exists:")
-            print(f"      {destination}")
-            continue
+            print(f"OVERWRITE: {destination}")
 
         try:
             encode_file(config, source, destination)
