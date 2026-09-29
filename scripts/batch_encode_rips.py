@@ -27,6 +27,29 @@ def find_mkv_files(input_dir: Path):
     )
 
 
+def print_tree(paths, existing):
+    tree = {}
+    for rel in paths:
+        node = tree
+        for part in rel.parts[:-1]:
+            node = node.setdefault(part + "/", {})
+        node[rel.parts[-1]] = rel
+
+    def walk(node, prefix):
+        items = sorted(node.items(), key=lambda kv: (not isinstance(kv[1], dict), kv[0]))
+        for i, (name, child) in enumerate(items):
+            last = i == len(items) - 1
+            label = name
+            if not isinstance(child, dict) and child in existing:
+                label += "  [output exists - SKIP]"
+            print(f"{prefix}{'└── ' if last else '├── '}{label}")
+            if isinstance(child, dict):
+                walk(child, prefix + ("    " if last else "│   "))
+
+    print(".")
+    walk(tree, "")
+
+
 def build_command(config, source: Path, destination: Path):
     preset = config.get("HB_PRESET_BD")
     hb_args = config.get("HB_ARGS_BD", "")
@@ -91,6 +114,12 @@ def main():
         help="Output directory for encoded files",
     )
 
+    parser.add_argument(
+        "-y",
+        action="store_true",
+        help="Proceed without asking for confirmation",
+    )
+
     args = parser.parse_args()
 
     input_dir = args.input.resolve()
@@ -125,7 +154,32 @@ def main():
         print("No MKV files found.")
         return
 
-    print(f"\nFound {len(files)} MKV file(s).")
+    print(f"\nFound {len(files)} MKV file(s) in {input_dir}:\n")
+
+    relatives = [f.relative_to(input_dir) for f in files]
+    existing = {r for r in relatives if (output_dir / r).with_suffix(".mkv").exists()}
+    print_tree(relatives, existing)
+
+    print(f"\nTarget output folder: {output_dir}")
+    if existing:
+        print(
+            f"{len(existing)} output file(s) already exist and will be SKIPPED "
+            "(not overwritten)."
+        )
+    print("No files will be overwritten.")
+
+    if len(existing) == len(files):
+        print("Nothing to encode.")
+        return
+
+    if not args.y:
+        try:
+            answer = input("\nProceed with batch encode? [y/N] ").strip().lower()
+        except EOFError:
+            answer = ""
+        if answer not in ("y", "yes"):
+            print("Aborted.")
+            return
 
     for index, source in enumerate(files, start=1):
         relative = source.relative_to(input_dir)
