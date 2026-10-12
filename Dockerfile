@@ -70,6 +70,16 @@ RUN pip3 install --break-system-packages \
 RUN /install_mkv_hb_deps.sh
 RUN /install_handbrake.sh
 
+# HandBrake on Linux passes the QSV adapter index ("0") to FFmpeg as the VAAPI device,
+# which FFmpeg opens as a relative path. Run HandBrake from a dir where "0" is the render node.
+# Opt-in only: plain HandBrakeCLI is left untouched. Use it by setting
+# HANDBRAKE_CLI: HandBrakeCLI-qsv in arm.yaml (see README).
+RUN HB="$(command -v HandBrakeCLI)" && test -n "$HB" && \
+    mkdir -p /opt/hbdev && \
+    ln -sf /dev/dri/renderD128 /opt/hbdev/0 && \
+    printf '#!/bin/sh\ncd /opt/hbdev && exec %s "$@"\n' "$HB" > /usr/local/bin/HandBrakeCLI-qsv && \
+    chmod +x /usr/local/bin/HandBrakeCLI-qsv
+
 # Reinstalling MakeMKV often fails due to instable makemkv.com dependency.
 # Also seems not required, so it is commented out.
 # RUN /install_makemkv.sh
